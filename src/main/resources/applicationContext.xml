@@ -1,0 +1,113 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.2.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+
+    <!--注解
+ 使用 <context:annotation-config/> 简化配置
+ Spring 2.1 添加了一个新的 context 的 Schema 命名空间，该命名空间对注释驱动、属性文件引入、加载期织入等功能提供了便捷的配置。
+ 我们知道注释本身是不会做任何事情的，它仅提供元数据信息。要使元数据信息真正起作用，必须让负责处理这些元数据的处理器工作起来。
+ 而我们前面所介绍的 AutowiredAnnotationBeanPostProcessor 和 CommonAnnotationBeanPostProcessor 就是处理这些注释元数据的处理器。
+ 但是直接在 Spring 配置文件中定义这些 Bean 显得比较笨拙。Spring 为我们提供了一种方便的注册这些BeanPostProcessor 的方式，
+ 这就是 <context:annotation-config/>
+
+ <context:annotation-config/> 将隐式地向 Spring 容器注册 AutowiredAnnotationBeanPostProcessor、
+ CommonAnnotationBeanPostProcessor、PersistenceAnnotationBeanPostProcessor
+        以及equiredAnnotationBeanPostProcessor 这 4 个 BeanPostProcessor。
+     在配置文件中使用 context 命名空间之前，必须在 <beans> 元素中声明 context 命名空间。
+  -->
+
+    <context:annotation-config />
+    <!-- 自动扫描该包-->
+    <context:component-scan base-package="com.myDemo"/>
+
+
+    <!-- 我们可以在其中添加我们所需要配置的bean，也可以添加相应的数据库连接和事务处理等等，方便后续拓展  -->
+    <context:property-placeholder location="classpath:dbconfig.properties" />
+
+    <!-- spring整合Mybatis步骤1：配置数据库的连接
+	具有连接池数据源的，一般使用c3p0或者dbcp  org.apache.commons.dbcp.BasicDataSource
+	这里需要指定一些属性：
+		1、连接数据库的4大件
+		2、c3p0的属性
+	网址：http://www.cnblogs.com/zfdai/p/3559768.html  对于org.apache.commons.dbcp.BasicDataSource的配置认知【转】
+	Spring在第三方依赖包中包含了两个数据源的实现类包，其一是Apache的DBCP，其二是 C3P0。可以在Spring配置文件中利用这两者中任何一个配置数据源。
+	-->
+    <!-- 配置c3p0 -->
+    <!-- <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+        destroy-method="close">
+        <property name="driverClass" value="${jdbc.driverClassName}" />
+        <property name="jdbcUrl" value="${jdbc.url}" />
+        <property name="user" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+
+        <property name="minPoolSize" value="10" />
+        <property name="maxPoolSize" value="100" />
+        <property name="maxIdleTime" value="1800" />
+        <property name="acquireIncrement" value="3" />
+        <property name="maxStatements" value="1000" />
+        <property name="initialPoolSize" value="10" />
+        <property name="idleConnectionTestPeriod" value="60" />
+        <property name="acquireRetryAttempts" value="30" />
+        <property name="breakAfterAcquireFailure" value="true" />
+        <property name="testConnectionOnCheckout" value="false" />
+    </bean>-->
+
+    <!-- 数据库连接池 -->
+    <!-- 配置dbcp -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+        destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxActive" value="30" />
+        <property name="maxIdle" value="10" />
+        <property name="maxWait" value="1000" />
+        <property name="defaultAutoCommit" value="true" /> </bean>
+
+   <!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>-->
+
+    <!-- 让spring管理sqlsessionfactory 使用mybatis和spring整合包中的 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 数据库连接池 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 加载mybatis的全局配置文件 -->
+        <!--<property name="configLocation" value="classpath:myBatisConfig.xml" />-->
+        <!--就是xml文件地址-->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+    <!-- 自动扫描mapper -->
+   <!-- 目前使用的层次结构
+    controller=====service ====mapper (mapper 定义接口和 **mapper.xml)
+    这里的mapper 相当于dao 层-->
+
+    <!-- spring整合Mybatis（Mapper方式） 步骤3：扫描Mapper包得到mapper对应的的代理对象
+            必须符合mapper开发的所有格式：Mybatis_04_Mapper
+        这里需要指定一些属性：
+            1、mapper所在的包
+            2、SqlSessionFactory对象的名字，是一个字符串
+        -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage"  value="com.myDemo.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+
+    </bean>
+
+
+</beans>
