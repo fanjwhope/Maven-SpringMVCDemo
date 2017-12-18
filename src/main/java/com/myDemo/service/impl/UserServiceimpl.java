@@ -1,7 +1,7 @@
 package com.myDemo.service.impl;
 
 import com.myDemo.mapper.UserMapper;
-import com.myDemo.model.User;
+import com.myDemo.model.admin.UserModel;
 import com.myDemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,11 +14,11 @@ public class UserServiceimpl implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public int insertUser(User user) throws Exception {
+    public int insertUser(UserModel user) throws Exception {
         return userMapper.insertUser(user);
     }
     @Override
-    public List<User> selectAllUser() throws Exception {
+    public List<UserModel> selectAllUser() throws Exception {
        return userMapper.selectAllUser();
     }
 }

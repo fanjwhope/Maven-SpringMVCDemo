@@ -29,11 +29,23 @@
 
     <context:annotation-config />
     <!-- 自动扫描该包-->
-    <context:component-scan base-package="com.myDemo"/>
+    <context:component-scan base-package="com.myDemo">
+        <!-- 不装配Controller -->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+
+    <!-- cxf webservice 配置-->
+    <!-- cxf3以后，只需要引入这个配置文件即可，其他两个废弃掉了 -->
+    <import resource="classpath:META-INF/cxf/cxf.xml"/>
+
+  <!--  <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml"/>
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>-->
 
 
     <!-- 我们可以在其中添加我们所需要配置的bean，也可以添加相应的数据库连接和事务处理等等，方便后续拓展  -->
     <context:property-placeholder location="classpath:dbconfig.properties" />
+
 
     <!-- spring整合Mybatis步骤1：配置数据库的连接
 	具有连接池数据源的，一般使用c3p0或者dbcp  org.apache.commons.dbcp.BasicDataSource
@@ -63,9 +75,16 @@
         <property name="testConnectionOnCheckout" value="false" />
     </bean>-->
 
-    <!-- 数据库连接池 -->
+    <!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+       <property name="driverClassName" value="${jdbc.driverClassName}"/>
+       <property name="url" value="${jdbc.url}"/>
+       <property name="username" value="${jdbc.username}"/>
+       <property name="password" value="${jdbc.password}"/>
+   </bean>-->
+
+    <!-- oracle 数据库连接池 -->
     <!-- 配置dbcp -->
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+ <!--   <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
         destroy-method="close">
         <property name="driverClassName" value="${jdbc.driverClassName}" />
         <property name="url" value="${jdbc.url}" />
@@ -74,14 +93,32 @@
         <property name="maxActive" value="30" />
         <property name="maxIdle" value="10" />
         <property name="maxWait" value="1000" />
-        <property name="defaultAutoCommit" value="true" /> </bean>
-
-   <!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${jdbc.driverClassName}"/>
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
+        <property name="defaultAutoCommit" value="true" />
     </bean>-->
+
+    <!-- mysql 数据库连接池 -->
+    <!-- 配置dbcp -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="${mysql.driverClassName}" />
+        <property name="url" value="${mysql.url}" />
+        <property name="username" value="${mysql.username}" />
+        <property name="password" value="${mysql.password}"/>
+        <property name="maxActive" value="30" />
+        <property name="maxIdle" value="10" />
+        <property name="maxWait" value="1000" />
+        <property name="defaultAutoCommit" value="true" />
+    </bean>
+
+    <!--配置事务管理  使用注解的方式管理事务。-->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+
+
 
     <!-- 让spring管理sqlsessionfactory 使用mybatis和spring整合包中的 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -91,7 +128,19 @@
         <!--<property name="configLocation" value="classpath:myBatisConfig.xml" />-->
         <!--就是xml文件地址-->
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+        <property name="plugins">
+            <list>
+                <!--mybatis分页插件拦截器-->
+                <bean class="com.github.miemiedev.mybatis.paginator.OffsetLimitInterceptor">
+                    <property name="dialectClass" value="com.github.miemiedev.mybatis.paginator.dialect.MySQLDialect"/>
+                </bean>
+                <!--自定义mybatis分页拦截器-->
+                <bean class="com.myDemo.common.interceptor.PageInterceptor">
+                </bean>
+            </list>
+        </property>
     </bean>
+
     <!-- 自动扫描mapper -->
    <!-- 目前使用的层次结构
     controller=====service ====mapper (mapper 定义接口和 **mapper.xml)
@@ -106,8 +155,13 @@
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage"  value="com.myDemo.mapper"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
-
     </bean>
+
+
+   <!-- 配置cxf webService -->
+    <jaxws:endpoint id="WebserviceTest"
+                    implementor="com.myDemo.webService.impl.WebserviceTestImpl"
+                    address="/WebserviceTest" />
 
 
 </beans>

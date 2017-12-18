@@ -1,6 +1,6 @@
 package com.myDemo.pojo;
 
-import com.myDemo.model.User;
+import com.myDemo.model.admin.UserModel;
 import lombok.*;
 
 import java.util.List;
@@ -11,6 +11,6 @@ import java.util.List;
 @Builder
 @ToString
 public class UserPojo {
-    private List<User> userList;
-    private User userBo;
+    private List<UserModel> userList;
+    private UserModel userBo;
 }

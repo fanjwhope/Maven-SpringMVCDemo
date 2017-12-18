@@ -8,7 +8,7 @@
 
     <!--welcome pages-->
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>/WEB-INF/views/index.jsp</welcome-file>
     </welcome-file-list>
 
     <!-- 编码过滤器 -->
@@ -42,8 +42,19 @@
         <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
     </listener>
 
-    <!--配置springmvc DispatcherServlet-->
 
+   <!-- 静态资源拦截器 default ：放置静态资源被拦截 方案1 -->
+  <!--  <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.js</url-pattern>
+        <url-pattern>*.css</url-pattern>
+        <url-pattern>*.ico</url-pattern>
+        <url-pattern>/statics/*</url-pattern>
+    </servlet-mapping>-->
+
+
+
+    <!--配置springmvc DispatcherServlet-->
     <!-- DispatcherServlet是前置控制器，配置在web.xml文件中的。拦截匹配的请求， Servlet拦截匹配规则要自已定义，把拦截下来的请求，依据某某规则分发到目标Controller来处理。
         Spring MVC servlet -->
     <servlet>
@@ -65,6 +76,19 @@
     </servlet-mapping>
 
 
+ <!--   配置cxf webservice-->
+    <servlet>
+        <servlet-name>CXFServlet</servlet-name>
+        <servlet-class>
+            org.apache.cxf.transport.servlet.CXFServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CXFServlet</servlet-name>
+        <url-pattern>/webservice/*</url-pattern>
+    </servlet-mapping>
 
 
 </web-app>

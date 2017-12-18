@@ -1,6 +1,6 @@
 package com.myDemo.controller;
 
-import com.myDemo.model.User;
+import com.myDemo.model.admin.UserModel;
 import com.myDemo.pojo.UserPojo;
 import com.myDemo.service.UserService;
 import org.apache.log4j.Logger;
@@ -27,7 +27,7 @@ public class RestControllerTest {
     }
 
     @RequestMapping("/userList")
-    public List<User> findUser() throws Exception{
+    public List<UserModel> findUser() throws Exception{
         return userService.selectAllUser();
     }
 

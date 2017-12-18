@@ -11,7 +11,7 @@
      id:在此命名空间下唯一标识
      resultType:查询结果的返回类型或者集合的泛型
   -->
-    <resultMap id="Usertest_rm" type="com.myDemo.model.User">
+    <resultMap id="Usertest_rm" type="com.myDemo.model.admin.UserModel">
         <result column="userid" property="id"/>
         <result column="username" property="name"/>
     </resultMap>
@@ -21,7 +21,7 @@
         select * from usertest
     </select>
     <!-- 新增 -->
-    <insert id="insertUser" parameterType="com.myDemo.model.User">
+    <insert id="insertUser" parameterType="com.myDemo.model.admin.UserModel">
         insert into usertest(userid,username,sal,birthday) values(1,#{name},#{sal},#{birthday})
     </insert>
 
