@@ -3,6 +3,7 @@ package com.myDemo.common.bean;
 import lombok.Data;
 
 /**
+ * 统一消息处理
  * 基础响应消息
  */
 @Data

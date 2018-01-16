@@ -1,5 +1,6 @@
 package com.myDemo.service.impl;
 
+import com.myDemo.common.bean.BussinessException;
 import com.myDemo.mapper.UserMapper;
 import com.myDemo.model.admin.UserModel;
 import com.myDemo.service.UserService;
@@ -20,5 +21,14 @@ public class UserServiceimpl implements UserService {
     @Override
     public List<UserModel> selectAllUser() throws Exception {
        return userMapper.selectAllUser();
+    }
+
+    @Override
+    public String testException(String msg) {
+        if ("have".equals(msg)) {
+           throw  new BussinessException("测试含有异常");
+        }else{
+            return "没有异常"+msg;
+        }
     }
 }

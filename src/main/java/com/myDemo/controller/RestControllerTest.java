@@ -1,5 +1,6 @@
 package com.myDemo.controller;
 
+import com.myDemo.common.bean.BaseResponse;
 import com.myDemo.model.admin.UserModel;
 import com.myDemo.pojo.UserPojo;
 import com.myDemo.service.UserService;
@@ -35,6 +36,11 @@ public class RestControllerTest {
     public String test02(@RequestBody UserPojo pojo) {
        System.out.println(pojo.getUserBo().toString());
         return "";
+    }
+
+    @RequestMapping("/test03")
+    public BaseResponse testGlobalExceptionHandle(String msg){
+        return BaseResponse.ok(userService.testException(msg));
     }
 
     //测试看看能不能获取到 bean

@@ -1,5 +1,6 @@
 package com.myDemo.service.impl;
 
+import com.myDemo.common.bean.BussinessException;
 import com.myDemo.mapper.UserinfoMapper;
 import com.myDemo.model.Userinfo;
 import com.myDemo.service.UserInfoService;
@@ -31,19 +32,20 @@ public class UserInfoServiceImpl  implements UserInfoService{
     @Override
     public boolean registerUser(Userinfo record) {
         //首先判断用户是否存在 根据usename
-        Long count=userinfoMapper.selectCountByUserName(record.getUsername());
+        int count=userinfoMapper.selectCountByUserName(record.getUsername());
         if (count>0){
             log.debug(record.getUsername()+"用戶已經存在！");
-            return false;
+            throw new BussinessException(record.getUsername()+"用戶已經存在！");
         }else {
             int a = userinfoMapper.insertSelective(record);
             if (a == 1) {
                 log.debug("注冊成功！");
-                return true;
             } else {
-                return false;
+                throw new BussinessException(record.getUsername()+"注册用戶出现异常！");
+
             }
         }
+        return true;
     }
 
     @Override

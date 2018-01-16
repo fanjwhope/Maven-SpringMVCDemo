@@ -7,29 +7,60 @@
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title>注册页面</title>
     <!-- Bootstrap -->
-    <link href="/statics/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+
+    <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/statics/plugins/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
     <script src="/statics/js/jquery1.12.4.min.js"></script>
-    <script src="/statics/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script src="/statics/plugins/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        body {
+            background:url(/statics/image/timg.jpg) no-repeat;background-size:cover;font-size: 16px;
+        }
+        .form{background: rgba(255,255,255,0.2);width:400px;margin:200px auto;}
+
+      /*  .fa{display: inline-block;top: 27px;left: 6px;position: relative;color: #ccc;}
+        input[type="text"],input[type="password"]{padding-left:26px;}*/
+    </style>
 
 </head>
 <body>
-<form id="form1" class="form-signin" <%--method="post" action="/doregister" onsubmit="checkUser()" --%>>
-    <h2 class="form-signin-heading">注册页面</h2>
+<div class="container">
+    <div class="form row">
+        <form id="form1" class="form-signin" style="margin-top: 20px" <%--method="post" action="/doregister" onsubmit="checkUser()" --%>>
+            <fieldset>
+                <center>用户注册</center>
+            </fieldset>
+            <div class="form-group ">
+                <label for="username" class="col-md-3 " style="text-align: right" >用户名称:</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control"  name="username" id="username" placeholder="用户名称" required autofocus>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="col-md-3" style="text-align: right">密码:</label>
+                <div class="col-md-9">
+                    <input type="password" class="form-control"  name="password" id="password" placeholder="密码" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="realname" class="col-md-3" style="text-align: right" >真实姓名:</label>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" name="realname" id="realname" placeholder="真实姓名" >
+                </div>
+            </div>
 
-    <label for="username" class="sr-only">用户名称</label>
-    <input type="text" class="form-control" style="width: 100%" name="username" id="username" placeholder="用户名称" required autofocus>
-    <label for="password" class="sr-only">密码</label>
-    <input type="password" class="form-control" style="width: 100%" name="password" id="password" placeholder="密码" required>
+            <div class="form-group" style="text-align: center">
+                <input type="reset" class="btn btn-info " value="重置 ">
+                <input class="btn btn-success " <%--type="submit"--%> type="button" onclick="checkUser()"  value="注册"/>
+            </div>
+            <div class="form-group">
+                <a href="javascript:;" id="login_btn" class="pull-right"  style="padding-right:20px " onclick="login()">登录</a>
+                <span id="content" class="text-center" style="padding-left: 20px"> 你好呀 </span>
+            </div>
+        </form>
+    </div>
+</div>
 
-    <label for="realname" class="sr-only">真实姓名</label>
-    <input type="text" class="form-control" style="width: 100%" name="realname" id="realname" placeholder="真实姓名" >
-
-    <button class="btn btn-lg btn-primary btn-block" type="reset">重置</button>
-    <button class="btn btn-lg btn-primary btn-block" <%--type="submit"--%> type="button" onclick="checkUser()">注册</button>
-    <button class="btn btn-lg btn-primary btn-block"  type="button" onclick="login()">登录页面</button>
-
-    <span id="content" class="text-center"> 你好呀 </span>
-</form>
 </body>
 <script>
     function checkUser(){

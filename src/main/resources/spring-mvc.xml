@@ -29,14 +29,17 @@
     会自动注册DefaultAnnotationHandlerMapping与AnnotationMethodHandlerAdapter 两个bean,是spring MVC为@Controllers分发请求所必须的。
           并提供了：数据绑定支持，@NumberFormatannotation支持，@DateTimeFormat支持，@Valid支持，读写XML的支持（JAXB），读写JSON的支持（Jackson）。
       -->
+
     <mvc:annotation-driven/>
 
     <!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器
      注意:这些配置是否需要重复在多个配置文件中配置。各个配置文件的作用。。以及在main 方法中使用 配置文件加载bean 时，使用的应该是那个配置文件呢 ？
 
      当 controller层注入service 注入不了时，如果注解没有问题的话，就需要检查配置文件的问题。
+     为了扫描到config 目录下的文件。
      -->
-     <context:component-scan base-package="com.myDemo.controller" />
+    <!-- <context:component-scan base-package="com.myDemo.controller" />-->
+    <context:component-scan base-package="com.myDemo" />
 
 
     <!--静态资源映射 ,静态资源最好不要放在web-INF下。放在webAPP 根目录下。 方案2-->

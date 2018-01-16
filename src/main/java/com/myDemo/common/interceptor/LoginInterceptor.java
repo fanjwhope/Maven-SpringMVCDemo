@@ -44,6 +44,8 @@ public class LoginInterceptor implements HandlerInterceptor{
         //不符合条件的，跳转到登录界面 /WEB-INF/views/login.jsp
         httpServletRequest.getRequestDispatcher("/login").forward(httpServletRequest, httpServletResponse);
         return false;
+        //不需要拦截的时候，返回true 即可。
+        // return true;
     }
 
     /**
