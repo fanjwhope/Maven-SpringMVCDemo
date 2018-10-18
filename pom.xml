@@ -10,7 +10,7 @@
 
     <properties>
         <!-- spring版本号 -->
-        <spring.version>4.3.10.RELEASE</spring.version>
+        <spring.version>4.3.15.RELEASE</spring.version>
         <!-- mybatis版本号 -->
         <mybatis.version>3.2.6</mybatis.version>
         <!-- cxf webService -->
@@ -165,6 +165,12 @@
               <artifactId>jstl</artifactId>
               <version>1.2</version>
             </dependency>-->
+
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+        </dependency>
 
         <!--其他需要的包-->
         <dependency>
